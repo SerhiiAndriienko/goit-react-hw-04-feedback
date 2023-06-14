@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import Statistics from './feedback/statistics/statistics';
-import Options from './feedback/options/options';
-import Section from './feedback/Section/section';
+import Statistics from './statistics/statistics';
+import Options from './options/options';
+import Section from './Section/section';
 import './App.css';
 
 export function App() {
@@ -11,22 +11,25 @@ export function App() {
   const [total, setTotal] = useState(0);
   const [percentOfGood, setPercentOfGood] = useState('');
 
-  const clickOnGoodBtn = () => {
-    setGood(prevState => prevState + 1);
-  };
-  const clickOnNeutralBtn = () => {
-    setNeutral(prevState => prevState + 1);
-  };
-  const clickOnBadBtn = () => {
-    setBad(prevState => prevState + 1);
+  const clickOnBtn = e => {
+    switch (e.target.textContent) {
+      case 'Good':
+        setGood(prevState => prevState + 1);
+        break;
+      case 'Neutral':
+        setNeutral(prevState => prevState + 1);
+        break;
+      case 'Bad':
+        setBad(prevState => prevState + 1);
+        break;
+      default:
+        console.log(e.target.textContent);
+    }
   };
 
   useEffect(() => {
     const total = bad + good + neutral;
     setTotal(total);
-  }, [good, bad, neutral]);
-
-  useEffect(() => {
     const percents = ((good * 100) / (bad + good + neutral)).toFixed(0);
     setPercentOfGood(percents);
   }, [good, bad, neutral]);
@@ -34,11 +37,7 @@ export function App() {
   return (
     <div>
       <Section title="Please leave feedback">
-        <Options
-          clickOnButtonG={clickOnGoodBtn}
-          clickOnButtonN={clickOnNeutralBtn}
-          clickOnButtonB={clickOnBadBtn}
-        ></Options>
+        <Options clickOnButton={clickOnBtn}></Options>
         <h2>Statistics</h2>
         <Statistics
           good={good}
